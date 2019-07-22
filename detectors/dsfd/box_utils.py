@@ -1,7 +1,41 @@
-import math
+import numpy as np
+from itertools import product as product
 import torch
 from torch.autograd import Function
-from itertools import product as product
+
+
+def nms_(dets, thresh):
+    """
+    Courtesy of Ross Girshick
+    [https://github.com/rbgirshick/py-faster-rcnn/blob/master/lib/nms/py_cpu_nms.py]
+    """
+    x1 = dets[:, 0]
+    y1 = dets[:, 1]
+    x2 = dets[:, 2]
+    y2 = dets[:, 3]
+    scores = dets[:, 4]
+
+    areas = (x2 - x1) * (y2 - y1)
+    order = scores.argsort()[::-1]
+
+    keep = []
+    while order.size > 0:
+        i = order[0]
+        keep.append(int(i))
+        xx1 = np.maximum(x1[i], x1[order[1:]])
+        yy1 = np.maximum(y1[i], y1[order[1:]])
+        xx2 = np.minimum(x2[i], x2[order[1:]])
+        yy2 = np.minimum(y2[i], y2[order[1:]])
+
+        w = np.maximum(0.0, xx2 - xx1)
+        h = np.maximum(0.0, yy2 - yy1)
+        inter = w * h
+        ovr = inter / (areas[i] + areas[order[1:]] - inter)
+
+        inds = np.where(ovr <= thresh)[0]
+        order = order[inds + 1]
+
+    return np.array(keep).astype(np.int)
 
 
 def decode(loc, priors, variances):
@@ -126,7 +160,7 @@ class Detect(Function):
             for cl in range(1, self.num_classes):
                 c_mask = conf_scores[cl].gt(self.conf_thresh)
                 scores = conf_scores[cl][c_mask]
-                
+
                 if scores.dim() == 0:
                     continue
                 l_mask = c_mask.unsqueeze(1).expand_as(boxes)
@@ -179,7 +213,7 @@ class PriorBox(object):
                 mean += [cx, cy, s_kw, s_kh]
 
         output = torch.FloatTensor(mean).view(-1, 4)
-        
+
         if self.clip:
             output.clamp_(max=1, min=0)
         

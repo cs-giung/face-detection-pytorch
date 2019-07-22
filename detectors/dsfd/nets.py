@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.nn.init as init
 from .box_utils import Detect, PriorBox
+import time
 
 
 class FEM(nn.Module):
@@ -11,25 +12,19 @@ class FEM(nn.Module):
         super(FEM, self).__init__()
         inter_planes = in_planes // 3
         inter_planes1 = in_planes - 2 * inter_planes
-        self.branch1 = nn.Conv2d(
-            in_planes, inter_planes, kernel_size=3, stride=1, padding=3, dilation=3)
+        self.branch1 = nn.Conv2d(in_planes, inter_planes, kernel_size=3, stride=1, padding=3, dilation=3)
 
         self.branch2 = nn.Sequential(
-            nn.Conv2d(in_planes, inter_planes, kernel_size=3,
-                      stride=1, padding=3, dilation=3),
+            nn.Conv2d(in_planes, inter_planes, kernel_size=3, stride=1, padding=3, dilation=3),
             nn.ReLU(inplace=True),
-            nn.Conv2d(inter_planes, inter_planes, kernel_size=3,
-                      stride=1, padding=3, dilation=3)
+            nn.Conv2d(inter_planes, inter_planes, kernel_size=3, stride=1, padding=3, dilation=3)
         )
         self.branch3 = nn.Sequential(
-            nn.Conv2d(in_planes, inter_planes1, kernel_size=3,
-                      stride=1, padding=3, dilation=3),
+            nn.Conv2d(in_planes, inter_planes1, kernel_size=3, stride=1, padding=3, dilation=3),
             nn.ReLU(inplace=True),
-            nn.Conv2d(inter_planes1, inter_planes1, kernel_size=3,
-                      stride=1, padding=3, dilation=3),
+            nn.Conv2d(inter_planes1, inter_planes1, kernel_size=3, stride=1, padding=3, dilation=3),
             nn.ReLU(inplace=True),
-            nn.Conv2d(inter_planes1, inter_planes1, kernel_size=3,
-                      stride=1, padding=3, dilation=3)
+            nn.Conv2d(inter_planes1, inter_planes1, kernel_size=3, stride=1, padding=3, dilation=3)
         )
 
     def forward(self, x):
@@ -263,6 +258,7 @@ class DSFDNet(nn.Module):
         ef6 = self.fpn_fem[5](conv7)
 
         pal2_sources = (ef1, ef2, ef3, ef4, ef5, ef6)
+
         for (x, l, c) in zip(pal1_sources, self.loc_pal1, self.conf_pal1):
             loc_pal1.append(l(x).permute(0, 2, 3, 1).contiguous())
             conf_pal1.append(c(x).permute(0, 2, 3, 1).contiguous())
@@ -284,11 +280,10 @@ class DSFDNet(nn.Module):
         conf_pal2 = torch.cat([o.view(o.size(0), -1) for o in conf_pal2], 1)
 
         with torch.no_grad():
-            priorbox = PriorBox(size, features_maps, pal=1)
-            self.priors_pal1 = priorbox.forward()
-
-            priorbox = PriorBox(size, features_maps, pal=2)
-            self.priors_pal2 = priorbox.forward()
+            self.priorbox1 = PriorBox(size, features_maps, pal=1)
+            self.priors_pal1 = self.priorbox1.forward()
+            self.priorbox2 = PriorBox(size, features_maps, pal=2)
+            self.priors_pal2 = self.priorbox2.forward()
 
         output = self.detect(
             loc_pal2.view(loc_pal2.size(0), -1, 4),

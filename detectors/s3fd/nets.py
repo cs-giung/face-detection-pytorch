@@ -130,7 +130,7 @@ class S3FDNet(nn.Module):
         for k in range(30, len(self.vgg)):
             x = self.vgg[k](x)
         sources.append(x)
-
+        
         # apply extra layers and cache source layer outputs
         for k, v in enumerate(self.extras):
             x = F.relu(v(x), inplace=True)
@@ -138,7 +138,6 @@ class S3FDNet(nn.Module):
                 sources.append(x)
 
         # apply multibox head to source layers
-
         loc_x = self.loc[0](sources[0])
         conf_x = self.conf[0](sources[0])
 
@@ -159,12 +158,12 @@ class S3FDNet(nn.Module):
             feat += [loc[i].size(1), loc[i].size(2)]
             features_maps += [feat]
 
+        loc = torch.cat([o.view(o.size(0), -1) for o in loc], 1)
+        conf = torch.cat([o.view(o.size(0), -1) for o in conf], 1)
+
         with torch.no_grad():
             self.priorbox = PriorBox(size, features_maps)
             self.priors = self.priorbox.forward()
-
-        loc = torch.cat([o.view(o.size(0), -1) for o in loc], 1)
-        conf = torch.cat([o.view(o.size(0), -1) for o in conf], 1)
 
         output = self.detect(
             loc.view(loc.size(0), -1, 4),

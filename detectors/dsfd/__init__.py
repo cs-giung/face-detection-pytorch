@@ -5,6 +5,7 @@ import torch
 from torchvision import transforms
 from .nets import DSFDNet
 from .nets2 import DSFDNet2
+from .box_utils import nms_
 
 PATH_WEIGHT = './detectors/dsfd/weights/dsfd_vgg_0.880.pth'
 PATH_WEIGHT2 = './detectors/dsfd/weights/WIDERFace_DSFD_RES152.pth'
@@ -55,7 +56,10 @@ class DSFD():
                         bbox = (pt[0], pt[1], pt[2], pt[3], score)
                         bboxes = np.vstack((bboxes, bbox))
                         j += 1
-        
+
+            keep = nms_(bboxes, 0.1)
+            bboxes = bboxes[keep]
+
         return bboxes
 
 

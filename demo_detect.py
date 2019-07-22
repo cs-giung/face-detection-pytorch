@@ -21,14 +21,14 @@ img = cv2.imread(IMAGE_PATH)
 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
 # load detectors.
-DET1 = MTCNN(device='cpu')
-DET2 = TinyFace(device='cpu')
-DET3 = S3FD(device='cpu')
-DET4 = DSFD(device='cpu')
+DET1 = MTCNN(device='cuda:1')
+DET2 = TinyFace(device='cuda:2')
+DET3 = S3FD(device='cuda:3')
+DET4 = DSFD(device='cuda:4')
 
 # MTCNN returns bboxes and landmarks.
 t = time.time()
-bboxes, _ = DET1.detect_faces(img, conf_th=0.9, scales=[1])
+bboxes, _ = DET1.detect_faces(img, conf_th=0.9, scales=[0.125])
 print('MTCNN : %d faces in %.4f seconds.' % (len(bboxes), time.time() - t))
 img1 = draw_bboxes(img, bboxes)
 
@@ -40,13 +40,13 @@ img2 = draw_bboxes(img, bboxes)
 
 # S3FD returns bboxes.
 t = time.time()
-bboxes = DET3.detect_faces(img, conf_th=0.9, scales=[1])
+bboxes = DET3.detect_faces(img, conf_th=0.8, scales=[0.5])
 print('S3FD : %d faces in %.4f seconds.' % (len(bboxes), time.time() - t))
 img3 = draw_bboxes(img, bboxes)
 
 # DSFD returns bboxes.
 t = time.time()
-bboxes = DET4.detect_faces(img, conf_th=0.9, scales=[1])
+bboxes = DET4.detect_faces(img, conf_th=0.8, scales=[0.5])
 print('DSFD : %d faces in %.4f seconds.' % (len(bboxes), time.time() - t))
 img4 = draw_bboxes(img, bboxes)
 

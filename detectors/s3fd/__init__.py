@@ -4,6 +4,7 @@ import cv2
 import torch
 from torchvision import transforms
 from .nets import S3FDNet
+from .box_utils import nms_
 
 PATH_WEIGHT = './detectors/s3fd/weights/sfd_face.pth'
 img_mean = np.array([104., 117., 123.])[:, np.newaxis, np.newaxis].astype('float32')
@@ -53,5 +54,8 @@ class S3FD():
                         bbox = (pt[0], pt[1], pt[2], pt[3], score)
                         bboxes = np.vstack((bboxes, bbox))
                         j += 1
-        
+
+            keep = nms_(bboxes, 0.1)
+            bboxes = bboxes[keep]
+
         return bboxes
