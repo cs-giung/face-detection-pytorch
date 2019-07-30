@@ -40,7 +40,7 @@ class MTCNN():
             bounding_boxes = [i for i in bounding_boxes if i is not None]
 
             if len(bounding_boxes) == 0:
-                return []
+                return [], []
 
             bounding_boxes = np.vstack(bounding_boxes)
 
@@ -74,7 +74,7 @@ class MTCNN():
 
             img_boxes = get_image_boxes(bounding_boxes, image, size=48)
             if len(img_boxes) == 0: 
-                return []
+                return [], []
             img_boxes = torch.Tensor(img_boxes).to(self.device)
             output = self.onet(img_boxes)
             landmarks = output[0].cpu().data.numpy()  # shape [n_boxes, 10]

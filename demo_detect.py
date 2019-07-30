@@ -28,7 +28,7 @@ DET4 = DSFD(device='cuda:4')
 
 # MTCNN returns bboxes and landmarks.
 t = time.time()
-bboxes, _ = DET1.detect_faces(img, conf_th=0.9, scales=[0.125])
+bboxes, _ = DET1.detect_faces(img, conf_th=0.9, scales=[0.125, 0.25, 0.5, 1])
 print('MTCNN : %d faces in %.4f seconds.' % (len(bboxes), time.time() - t))
 img1 = draw_bboxes(img, bboxes)
 
@@ -40,13 +40,13 @@ img2 = draw_bboxes(img, bboxes)
 
 # S3FD returns bboxes.
 t = time.time()
-bboxes = DET3.detect_faces(img, conf_th=0.9, scales=[0.5])
+bboxes = DET3.detect_faces(img, conf_th=0.9, scales=[0.5, 1])
 print('S3FD : %d faces in %.4f seconds.' % (len(bboxes), time.time() - t))
 img3 = draw_bboxes(img, bboxes)
 
 # DSFD returns bboxes.
 t = time.time()
-bboxes = DET4.detect_faces(img, conf_th=0.9, scales=[0.5])
+bboxes = DET4.detect_faces(img, conf_th=0.9, scales=[0.5, 1])
 print('DSFD : %d faces in %.4f seconds.' % (len(bboxes), time.time() - t))
 img4 = draw_bboxes(img, bboxes)
 

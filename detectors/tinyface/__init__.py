@@ -76,7 +76,10 @@ class TinyFace():
                 # ignore templates by scale
                 tids = list(range(4, 12)) + ([] if s <= 1.0 else list(range(18, 25)))
                 ignored_tids = list(set(range(0, 25)) - set(tids))
-                prob_cls[:, :, ignored_tids] = 0.0
+                try:
+                    prob_cls[:, :, ignored_tids] = 0.0
+                except IndexError:
+                    pass
 
                 # threshold for detection
                 indices = np.where(prob_cls > conf_th)
