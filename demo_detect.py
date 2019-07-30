@@ -40,21 +40,21 @@ img2 = draw_bboxes(img, bboxes)
 
 # S3FD returns bboxes.
 t = time.time()
-bboxes = DET3.detect_faces(img, conf_th=0.8, scales=[0.5])
+bboxes = DET3.detect_faces(img, conf_th=0.9, scales=[0.5])
 print('S3FD : %d faces in %.4f seconds.' % (len(bboxes), time.time() - t))
 img3 = draw_bboxes(img, bboxes)
 
 # DSFD returns bboxes.
 t = time.time()
-bboxes = DET4.detect_faces(img, conf_th=0.8, scales=[0.5])
+bboxes = DET4.detect_faces(img, conf_th=0.9, scales=[0.5])
 print('DSFD : %d faces in %.4f seconds.' % (len(bboxes), time.time() - t))
 img4 = draw_bboxes(img, bboxes)
 
 # plot results.
 results = {
-    'MTCNN (conf_th=0.9, scales=[1])': img1,
+    'MTCNN (conf_th=0.9, scales=[0.125])': img1,
     'Tiny Face (conf_th=0.9, scales=[1])': img2,
-    'S3FD (conf_th=0.9, scales=[1])': img3,
-    'DSFD (conf_th=0.9, scales=[1])': img4
+    'S3FD (conf_th=0.9, scales=[0.5])': img3,
+    'DSFD (conf_th=0.9, scales=[0.5])': img4
 }
 plot_figures(results, 2, 2)
