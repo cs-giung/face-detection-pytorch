@@ -4,6 +4,7 @@ dataset/
 
 *.pth
 *.tar
+!FaceBoxes.pth
 
 *.jpg
 !selfie.jpg

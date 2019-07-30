@@ -21,10 +21,10 @@ img = cv2.imread(IMAGE_PATH)
 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
 # load detectors.
-DET1 = MTCNN(device='cuda:1')
-DET2 = TinyFace(device='cuda:2')
-DET3 = S3FD(device='cuda:3')
-DET4 = DSFD(device='cuda:4')
+DET1 = MTCNN(device='cuda')
+DET2 = TinyFace(device='cuda')
+DET3 = S3FD(device='cuda')
+DET4 = DSFD(device='cuda')
 
 # MTCNN returns bboxes and landmarks.
 t = time.time()
