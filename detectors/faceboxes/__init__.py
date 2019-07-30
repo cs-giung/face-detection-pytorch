@@ -31,8 +31,9 @@ class FaceBoxes():
         self.net.eval()
         print('[FaceBoxes] finished loading (%.4f sec)' % (time.time() - tstamp))
 
-
     def detect_faces(self, image, conf_th=0.8, scales=[1]):
+
+        bboxes = np.empty(shape=(0, 5))
 
         for s in scales:
             img = cv2.resize(image, dsize=(0, 0), fx=s, fy=s, interpolation=cv2.INTER_LINEAR)
@@ -46,21 +47,16 @@ class FaceBoxes():
             scale = scale.to(self.device)
 
             loc, conf = self.net(img)
+
             priorbox = PriorBox(image_size=(img_height, img_width))
             priors = priorbox.forward()
             priors = priors.to(self.device)
             prior_data = priors.data
+
             boxes = decode(loc.data.squeeze(0), prior_data, [0.1, 0.2])
-            boxes = boxes * scale / 1
+            boxes = boxes * scale / s
             boxes = boxes.cpu().numpy()
             scores = conf.data.cpu().numpy()[:, 1]
-            bbox = []
-            for i in range(len(boxes)):
-                box = boxes[i][0], boxes[i][1], boxes[i][2], boxes[i][3], scores[i]
-                bbox.append(box)
-            return bbox
-            print(boxes)
-            print(scores)
 
             inds = np.where(scores > conf_th)[0]
             boxes = boxes[inds]
@@ -75,11 +71,10 @@ class FaceBoxes():
             dets = dets[keep, :]
             dets = dets[:750, :]
 
-            print(dets)
+            for bbox in dets:
+                bboxes = np.vstack((bboxes, bbox))
 
-            for k in range(dets.shape[0]):
-                bbox = dets[k, 0:5]
-                print(bbox)
+        keep = nms_(bboxes, 0.1)
+        bboxes = bboxes[keep]
 
-        # # initialize output
-        # bboxes = np.empty(shape=(0, 5))
+        return bboxes
