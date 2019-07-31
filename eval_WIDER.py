@@ -1,7 +1,7 @@
 import numpy as np
 import argparse, os, time, cv2
 from tqdm import tqdm
-from detectors import MTCNN, TinyFace, S3FD, DSFD
+from detectors import MTCNN, TinyFace, S3FD, DSFD, FaceBoxes
 
 
 IMAGE_DIR = './dataset/WIDER/WIDER_train/images/'
@@ -81,6 +81,9 @@ def main():
     elif method == 'dsfd':
         det = DSFD(device=device)
         scale_list = [0.5, 1]
+    elif method == 'faceboxes':
+        det = FaceBoxes(device=device)
+        scale_list = [1, 2, 4]
 
     N = len(WD.data_dict.keys())
     total_iou = 0.0
