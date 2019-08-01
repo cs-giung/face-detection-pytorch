@@ -1,5 +1,5 @@
 ## Face Detection
-PyTorch implementations of various face detection algorithms (last updated on 2019-07-20).
+PyTorch implementations of various face detection algorithms (last updated on 2019-08-01).
 
 ### Usage Example
 ```python
@@ -92,3 +92,6 @@ python demo_crop.py
     * [arXiv : DSFD: Dual Shot Face Detector](https://arxiv.org/abs/1810.10220)
     * [GitHub : DSFD.pytorch](https://github.com/yxlijun/DSFD.pytorch)
     * [GitHub : FaceDetection-DSFD](https://github.com/TencentYoutuResearch/FaceDetection-DSFD)
+* FaceBoxes
+    * [arXiv : FaceBoxes: A CPU Real-time Face Detector with High Accuracy](https://arxiv.org/abs/1708.05234)
+    * [GitHub : FaceBoxes.PyTorch](https://github.com/zisianw/FaceBoxes.PyTorch)
