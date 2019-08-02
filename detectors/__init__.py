@@ -4,3 +4,4 @@ from .s3fd import S3FD
 # from .dsfd import DSFD
 from .dsfd_ import DSFD
 from .faceboxes import FaceBoxes
+from .pyramidbox import PyramidBox
