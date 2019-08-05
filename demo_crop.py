@@ -1,6 +1,6 @@
 import time, cv2
 from matplotlib import pyplot as plt
-from detectors import DSFD2
+from detectors import DSFD
 from utils import crop_thumbnail
 
 
@@ -10,7 +10,7 @@ img = cv2.imread(IMAGE_PATH)
 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
 # load detector.
-DET = DSFD2(device='cpu')
+DET = DSFD(device='cuda')
 
 # DSFD returns bboxes.
 t = time.time()

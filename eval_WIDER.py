@@ -1,7 +1,12 @@
 import numpy as np
 import argparse, os, time, cv2
 from tqdm import tqdm
-from detectors import MTCNN, TinyFace, S3FD, DSFD, FaceBoxes
+from detectors import MTCNN
+from detectors import FaceBoxes
+from detectors import TinyFace
+from detectors import PyramidBox
+from detectors import S3FD
+from detectors import DSFD
 
 
 IMAGE_DIR = './dataset/WIDER/WIDER_train/images/'
