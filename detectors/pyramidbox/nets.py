@@ -78,8 +78,9 @@ class CPM(nn.Module):
 
 class PyramidBoxNet(nn.Module):
 
-    def __init__(self):
+    def __init__(self, device='cuda'):
         super(PyramidBoxNet, self).__init__()
+        self.device = device
 
         self.vgg = nn.ModuleList([
             nn.Conv2d(3, 64, 3, 1, padding=1),
@@ -267,7 +268,7 @@ class PyramidBoxNet(nn.Module):
         output = self.detect(
             face_mbox_loc,
             self.softmax(face_mbox_conf),
-            self.priors
+            self.priors.to(self.device)
         )
 
         return output

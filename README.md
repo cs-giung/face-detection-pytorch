@@ -62,14 +62,13 @@ python demo_detect.py
 ```
 ![](selfie_demo.png)
 
-Note that it shows bounding boxes only for default scale image *without image pyramid*. Number of bounding boxes ─ not detected faces ─ are as follows:
+Note that it shows bounding boxes only for default scale image *without image pyramid*. Number of bounding boxes ─ not detected faces ─ and minimum box sizes are as follows:
 
-|     | # of boxes |
-| :-: | -: |
-| MTCNN | 215 |
-| Tiny Face | 690 |
-| S3FD | 478 |
-| DSFD | 531 |
+|                    | MTCNN | FaceBoxes | Tiny face | PyramidBox |  S3FD  |  DSFD  |
+|         -          |   -   |     -     |     -     |     -      |    -   |    -   |
+|     # of boxes     |  210  |     28    |    686    |    512     |   475  |  528   |
+|  minimum box size  |   71  |   1136    |    138    |    109     |   108  |  113   |
+|  minimum box size  | 1046  |  27901    |  36912    |  24059     |  26711 |  15814 |
 
 ### Demo 02 : crop
 ```
@@ -106,6 +105,3 @@ python demo_crop.py
     * [arXiv : DSFD: Dual Shot Face Detector](https://arxiv.org/abs/1810.10220)
     * [GitHub : DSFD.pytorch](https://github.com/yxlijun/DSFD.pytorch)
     * [GitHub : FaceDetection-DSFD](https://github.com/TencentYoutuResearch/FaceDetection-DSFD)
-* FaceBoxes
-    * [arXiv : FaceBoxes: A CPU Real-time Face Detector with High Accuracy](https://arxiv.org/abs/1708.05234)
-    * [GitHub : FaceBoxes.PyTorch](https://github.com/zisianw/FaceBoxes.PyTorch)

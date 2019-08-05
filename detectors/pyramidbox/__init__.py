@@ -18,7 +18,7 @@ class PyramidBox():
         self.device = device
 
         print('[PyramidBox] loading with', self.device)
-        self.net = PyramidBoxNet().to(self.device)
+        self.net = PyramidBoxNet(self.device).to(self.device)
         state_dict = torch.load(PATH_WEIGHT, map_location=self.device)
         self.net.load_state_dict(state_dict)
         self.net.eval()
