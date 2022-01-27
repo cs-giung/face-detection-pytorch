@@ -34,8 +34,7 @@ class S3FD():
             for s in scales:
                 scaled_img = cv2.resize(image, dsize=(0, 0), fx=s, fy=s, interpolation=cv2.INTER_LINEAR)
 
-                scaled_img = np.swapaxes(scaled_img, 1, 2)
-                scaled_img = np.swapaxes(scaled_img, 1, 0)
+                scaled_img = np.rollaxis(scaled_img, 2, 0)
                 scaled_img = scaled_img[[2, 1, 0], :, :]
                 scaled_img = scaled_img.astype('float32')
                 scaled_img -= img_mean
